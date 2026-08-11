@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-success text-white text-center py-4">
+                    <h2 class="mb-0">✅ ¡Compra Exitosa!</h2>
+                    <p class="mb-0">Gracias por tu preferencia</p>
+                </div>
+                
+                <div class="card-body p-5">
+                    <div class="row mb-4">
+                        <div class="col-sm-6">
+                            <h5 class="text-muted">Detalles del Cliente:</h5>
+                            <p class="fw-bold mb-0">{{ request.user.username }}</p>
+                        </div>
+                        <div class="col-sm-6 text-sm-end">
+                            <h5 class="text-muted">Orden #{{ orden.id }}</h5>
+                            <p class="mb-0">{{ orden.fecha }}</p>
+                        </div>
+                    </div>
+                    
+                    <table class="table table-bordered table-striped mt-4">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Producto</th>
+                                <th class="text-center">Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for detalle in detalles %}
+                            <tr>
+                                <td>{{ detalle.producto.nombre }}</td>
+                                <td class="text-center">{{ detalle.cantidad }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-success">
+                                <th class="text-end fs-5">TOTAL PAGADO:</th>
+                                <th class="text-center fs-5">${{ orden.total }}</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <div class="text-center mt-5 d-print-none">
+                        <button onclick="window.print()" class="btn btn-secondary btn-lg me-3">
+                            🖨️ Imprimir Recibo
+                        </button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg">
+                            Volver a la Tienda
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,416 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    /* ====================================================================
+       1. PALETA DE COLORES PREMIUM (Dark Navy / Modo Noche)
+    ==================================================================== */
+    :root {
+        --bg-body: #0b1120;         /* Azul noche muy oscuro para el fondo exterior */
+        --grid-line: #1e293b;       /* Azul pizarra para las líneas de la cuadrícula */
+        --card-bg: #151e2e;         /* Azul marino oscuro para el interior de las secciones */
+        
+        /* Colores de Acento (Vibrantes para resaltar en fondo oscuro) */
+        --primary: #3b82f6;         /* Azul Brillante */
+        --primary-light: rgba(59, 130, 246, 0.15); /* Fondo translúcido azul */
+        --success: #10b981;         /* Verde Esmeralda */
+        --success-light: rgba(16, 185, 129, 0.15); /* Fondo translúcido verde */
+        --warning: #f59e0b;         /* Ámbar */
+        --danger: #ef4444;          /* Rojo Carmesí */
+        --danger-light: rgba(239, 68, 68, 0.15);   /* Fondo translúcido rojo */
+        
+        /* Textos */
+        --text-main: #f8fafc;       /* Blanco tiza para alta legibilidad */
+        --text-muted: #94a3b8;      /* Gris azulado para datos secundarios */
+    }
+
+    body {
+        background-color: var(--bg-body) !important;
+        color: var(--text-main) !important;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .dashboard-wrapper {
+        padding: 30px;
+        max-width: 1450px;
+        margin: 0 auto;
+    }
+
+    /* Título principal con estilo de placa oscura y brillo sutil */
+    .dashboard-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        background: linear-gradient(to right, #1e293b, #0f172a);
+        padding: 18px 25px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        color: white;
+        border: 1px solid #334155;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .dashboard-header h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: #f8fafc;
+    }
+
+    /* ====================================================================
+       2. ESTRUCTURA DE LA CUADRÍCULA MAESTRA (2x2 PERFECTA)
+    ==================================================================== */
+    .master-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto auto;
+        background-color: var(--grid-line);
+        gap: 2px;
+        border: 2px solid var(--grid-line);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); /* Sombra más pronunciada */
+    }
+
+    .quadrant {
+        background-color: var(--card-bg);
+        padding: 28px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        position: relative;
+    }
+
+    .quadrant-title {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: var(--text-main);
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #1e293b; /* Línea divisoria oscura */
+    }
+
+    /* ====================================================================
+       3. COMPONENTES INTERNOS DETALLADOS
+    ==================================================================== */
+    /* Tarjetas de métricas pequeñas */
+    .metric-card {
+        background-color: #0f172a; /* Fondo ultra oscuro para contraste */
+        border: 1px solid #334155; /* Borde sutil */
+        border-radius: 8px;
+        padding: 16px;
+        transition: all 0.2s ease-in-out;
+    }
+    .metric-card:hover {
+        border-color: var(--primary);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        transform: translateY(-2px); /* Efecto de elevación */
+    }
+
+    .metric-label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+    .metric-value { font-size: 1.8rem; font-weight: 800; color: var(--text-main); margin: 5px 0; }
+    
+    /* Barras de progreso de inventario */
+    .progress-track { background-color: #334155; border-radius: 10px; height: 8px; width: 100%; overflow: hidden; margin-top: 6px; }
+    .progress-fill { height: 100%; border-radius: 10px; }
+
+    /* Insignias (Badges) adaptadas a fondo oscuro */
+    .badge-soft { padding: 5px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.3px; }
+    .badge-soft-primary { background-color: var(--primary-light); color: var(--primary); border: 1px solid rgba(59, 130, 246, 0.3); }
+    .badge-soft-success { background-color: var(--success-light); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-soft-danger { background-color: var(--danger-light); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+
+    /* Tablas Ultra Limpias para Dark Mode */
+    .detail-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+    .detail-table th { color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; padding: 10px 8px; border-bottom: 2px solid #1e293b; font-weight: 700; }
+    .detail-table td { padding: 12px 8px; font-size: 0.85rem; border-bottom: 1px solid #1e293b; vertical-align: middle; }
+    .detail-table tr:hover td { background-color: #1e293b; }
+
+    /* Botones de acción */
+    .btn-action { background-color: var(--primary); color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .btn-action:hover { background-color: #2563eb; transform: scale(1.05); }
+
+    /* Corrección de bordes en línea para el modo oscuro */
+    .border-end { border-color: var(--grid-line) !important; }
+</style>
+
+<div class="dashboard-wrapper">
+    
+    <div class="dashboard-header">
+        <i class="bi bi-grid-1x2-fill fs-3 text-info"></i>
+        <div>
+            <h1>Centro de Inteligencia Gerencial</h1>
+            <span style="font-size: 0.8rem; color: #94a3b8;">Sistema de Monitoreo Automatizado Ferretería ML</span>
+        </div>
+    </div>
+
+    <div class="master-grid">
+
+        <div class="quadrant">
+            <div class="quadrant-title">
+                <i class="bi bi-wallet2 text-primary fs-4"></i> Rendimiento Comercial
+            </div>
+            
+            <div class="row g-3 mb-4">
+                <div class="col-6">
+                    <div class="metric-card">
+                        <div class="metric-label">Ventas del Mes</div>
+                        <div class="metric-value">${{ d.ventas_mes|floatformat:0 }}</div>
+                        <span class="badge-soft badge-soft-success"><i class="bi bi-arrow-up-right"></i> Óptimo</span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="metric-card">
+                        <div class="metric-label">Pedidos Activos</div>
+                        <div class="metric-value">{{ d.pedidos_totales }}</div>
+                        <span class="badge-soft badge-soft-primary"><i class="bi bi-box-seam"></i> En sistema</span>
+                    </div>
+                </div>
+            </div>
+
+            <span class="metric-label d-block mb-2 text-muted">Productos con Mayor Volumen de Salida</span>
+            <table class="detail-table">
+                <tbody>
+                    {% for p in d.top_volumen|slice:":3" %}
+                    <tr>
+                        <td class="fw-semibold" style="color: var(--text-main);"><i class="bi bi-check2-circle text-success me-2"></i>{{ p.Producto }}</td>
+                        <td class="text-end"><span class="badge-soft badge-soft-primary">+{{ p.Salidas }} salidas</span></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td class="text-muted small">Aún no hay registros de salidas.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="quadrant">
+            <div class="quadrant-title">
+                <i class="bi bi-people text-warning fs-4"></i> Analítica de Clientes
+            </div>
+
+            <div class="row h-100">
+                <div class="col-7 border-end" style="border-color: #f1f5f9 !important; padding-right: 20px;">
+                    <span class="metric-label d-block mb-3 text-muted">Top Consumidores Financieros</span>
+                    <table class="detail-table">
+                        <tbody>
+                            {% for c in d.top_clientes|slice:":4" %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div style="width: 30px; height: 30px; background-color: var(--primary-light); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;">
+                                            {{ c.usuario__username|make_list|first|upper }}
+                                        </div>
+                                        <span class="fw-semibold" style="color: var(--text-main);">{{ c.usuario__username }}</span>
+                                    </div>
+                                </td>
+                                <td class="text-end fw-bold" style="color: var(--primary);">${{ c.total_gastado|floatformat:0 }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td class="text-muted small">No hay clientes acumulados.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-5 d-flex flex-column justify-content-center align-items-center" style="padding-left: 10px;">
+                    <span class="metric-label d-block mb-2 text-muted text-center">Composición</span>
+                    <div style="width: 130px; height: 130px; position: relative;">
+                        <canvas id="miniDonut"
+                                data-frecuentes="{{ d.pct_frecuentes|default:0 }}"
+                                data-ocasionales="{{ d.pct_ocasionales|default:0 }}">
+                        </canvas>
+                    </div>
+                    <div class="mt-3 d-flex flex-column gap-1 w-100 px-2">
+                        <div class="d-flex justify-content-between align-items-center small">
+                            <span class="text-muted"><i class="bi bi-circle-fill" style="color: var(--primary); font-size: 0.5rem; margin-right: 4px;"></i> Frecuentes</span>
+                            <span class="fw-bold">{{ d.pct_frecuentes }}%</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center small">
+                            <span class="text-muted"><i class="bi bi-circle-fill" style="color: #94a3b8; font-size: 0.5rem; margin-right: 4px;"></i> Ocasionales</span>
+                            <span class="fw-bold">{{ d.pct_ocasionales }}%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quadrant">
+            <div class="quadrant-title">
+                <i class="bi bi-box-seam text-danger fs-4"></i> Logística de Abastecimiento
+            </div>
+            
+            <span class="metric-label d-block mb-3 text-muted">Productos en Estado Crítico</span>
+            
+            <table class="detail-table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Nivel de Stock</th>
+                        <th>Demanda</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in d.sugerencias|slice:":4" %}
+                    <tr>
+                        <td class="fw-semibold" style="color: var(--text-main);">{{ s.Producto|truncatechars:18 }}</td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="fw-bold" style="color: var(--danger);">{{ s.Stock }}</span>
+                                <div style="width: 50px; height: 6px; background-color: #e2e8f0; border-radius: 3px; overflow: hidden;">
+                                    <div style="width: {% widthratio s.Stock 20 100 %}%; max-width: 100%; height: 100%; background-color: var(--danger);"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="text-muted">+{{ s.Salidas }}</span></td>
+                        <td><button class="btn-action" style="background-color: var(--danger);">Surtir</button></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted py-4">
+                            <i class="bi bi-shield-check text-success fs-3 d-block mb-2"></i>
+                            Inventario estable. Sin reabastecimiento urgente.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="quadrant">
+            <div class="quadrant-title">
+                <i class="bi bi-graph-up text-success fs-4"></i> Flujo de Efectivo Real
+            </div>
+
+            <div class="row g-2 mb-4">
+                <div class="col-6">
+                    <div class="metric-card" style="background-color: var(--success-light); border-color: #a7f3d0;">
+                        <div class="metric-label" style="color: #047857;">Caja de Hoy</div>
+                        <div class="metric-value" style="color: #064e3b; font-size: 1.5rem;">${{ d.ventas_hoy|floatformat:0 }}</div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="metric-card" style="background-color: var(--primary-light); border-color: #bfdbfe;">
+                        <div class="metric-label" style="color: #1d4ed8;">Últimos 7 Días</div>
+                        <div class="metric-value" style="color: #1e3a8a; font-size: 1.5rem;">${{ d.ventas_semana|floatformat:0 }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <span class="metric-label d-block mb-2 text-muted">Tendencia de Ingresos</span>
+            
+            <div style="flex-grow: 1; min-height: 120px; position: relative; width: 100%;">
+                <canvas id="gridLineChart"
+                        data-hoy="{{ d.ventas_hoy|default:0 }}" 
+                        data-semana="{{ d.ventas_semana|default:0 }}" 
+                        data-mes="{{ d.ventas_mes|default:0 }}">
+                </canvas>
+            </div>
+        </div>
+
+    </div> </div> ```
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        // 1. Gráfico de Dona (Sección 2 - Analítica de Clientes)
+        const canvasDonut = document.getElementById('miniDonut');
+        const pctFrecuentes = parseFloat(canvasDonut.dataset.frecuentes) || 0;
+        const pctOcasionales = parseFloat(canvasDonut.dataset.ocasionales) || 0;
+
+        const ctxDonut = canvasDonut.getContext('2d');
+        new Chart(ctxDonut, {
+            type: 'doughnut',
+            data: {
+                labels: ['Frecuentes', 'Ocasionales'],
+                datasets: [{
+                    data: [pctFrecuentes, pctOcasionales], // Porcentajes extraídos de la BD
+                    backgroundColor: ['#3b82f6', '#1e293b'], // Azul primary y azul pizarra (Dark Mode)
+                    borderWidth: 0,
+                    cutout: '75%' 
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { 
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return ' ' + context.label + ': ' + context.raw + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 2. Gráfico de Línea (Sección 4 - Flujo de Efectivo)
+        const canvasLine = document.getElementById('gridLineChart');
+        // Extraemos los valores inyectados por Django
+        const vHoy = parseFloat(canvasLine.dataset.hoy) || 0;
+        const vSemana = parseFloat(canvasLine.dataset.semana) || 0;
+        const vMes = parseFloat(canvasLine.dataset.mes) || 0;
+
+        const ctxLine = canvasLine.getContext('2d');
+
+        // Creamos un gradiente verde esmeralda transparente para el fondo de la curva
+        let gradient = ctxLine.createLinearGradient(0, 0, 0, 120);
+        gradient.addColorStop(0, 'rgba(16, 185, 129, 0.2)'); // Verde success con opacidad
+        gradient.addColorStop(1, 'rgba(16, 185, 129, 0)');
+
+        new Chart(ctxLine, {
+            type: 'line',
+            data: {
+                labels: ['Día de Hoy', 'Última Semana', 'Mes Actual'],
+                datasets: [{
+                    label: 'Ingresos ($)',
+                    data: [vHoy, vSemana, vMes], 
+                    borderColor: '#10b981', // Verde esmeralda intenso
+                    borderWidth: 3,
+                    backgroundColor: gradient,
+                    fill: true,
+                    tension: 0.4, // Suaviza la curva (efecto spline)
+                    pointBackgroundColor: '#ffffff', // Puntos blancos
+                    pointBorderColor: '#10b981', // Borde verde en los puntos
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { 
+                    legend: { display: false } 
+                },
+                scales: {
+                    x: { 
+                        grid: { display: false }, 
+                        ticks: { font: { size: 10, family: 'Inter' }, color: '#64748b' } 
+                    },
+                    y: { 
+                        display: false, // Oculta el eje Y para que se vea como en tu imagen
+                        grid: { display: false },
+                        min: 0 // Asegura que la gráfica no se corte por debajo de cero
+                    }
+                },
+                layout: {
+                    padding: { top: 15, bottom: 5, left: 10, right: 10 }
+                }
+            }
+        });
+
+    });
+</script>
+{% endblock %}

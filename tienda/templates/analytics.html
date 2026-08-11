@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Panel de Inteligencia Artificial y Analíticas</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="m-0">Agrupamiento de Productos (K-Means)</h5>
+                </div>
+                <div class="card-body text-center">
+                    {% if grafico_clusters %}
+                        <div class="plotly-graph">
+                            {{ grafico_clusters|safe }}
+                        </div>
+                        <p class="text-muted mt-2 small">Pasa el cursor sobre los puntos para ver el nombre y precio de los productos.</p>
+                    {% else %}
+                        <p class="py-5">No hay suficientes datos para generar el clustering.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="m-0">Tus Intereses Personales</h5>
+                </div>
+                <div class="card-body text-center">
+                    {% if grafico_usuario %}
+                        <div class="plotly-graph">
+                            {{ grafico_usuario|safe }}
+                        </div>
+                        <p class="text-muted mt-2 small">Análisis basado en tus interacciones recientes.</p>
+                    {% else %}
+                        <div class="py-5">
+                            <p>Inicia sesión y navega por la tienda para ver tus estadísticas personalizadas.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-dark text-white text-center">
+                    <h5 class="m-0">Optimización de IA: Método del Codo (Elbow Method)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-7 text-center">
+                            {% if grafico_codo %}
+                                <img src="data:image/png;base64,{{ grafico_codo }}" class="img-fluid rounded" alt="Gráfico del codo">
+                            {% else %}
+                                <p>Cargando datos matemáticos...</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-5">
+                            <h6>¿Qué significa esto?</h6>
+                            <p class="text-muted">
+                                Esta gráfica muestra la <strong>Inercia</strong> (error) frente al número de grupos (K). 
+                                El "codo" de la gráfica nos indica cuántos grupos son ideales para no sobrecargar a la IA.
+                            </p>
+                            <ul class="small text-muted">
+                                <li><strong>Punto de inflexión:</strong> Es donde la mejora deja de ser drástica.</li>
+                                <li><strong>Eficiencia:</strong> Ayuda a que las recomendaciones sean más rápidas y precisas.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .plotly-graph {
+        width: 100%;
+        min-height: 400px;
+    }
+</style>
+{% endblock %}

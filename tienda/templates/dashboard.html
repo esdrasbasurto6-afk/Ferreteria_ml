@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="text-2xl font-bold mb-6 text-gray-800 border-b-2 border-blue-500 pb-2 inline-block">
+    Nuestros Productos
+</h2>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-12">
+    {% for p in productos %}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow duration-300">
+        <div class="p-5">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ p.nombre }}</h3>
+            <p class="text-2xl font-bold text-blue-600 mb-4">${{ p.precio }}</p>
+            
+            <div class="flex flex-col space-y-2">
+                <a href="{% url 'detalle_producto' p.id %}" class="text-center py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition">
+                    Ver Detalles
+                </a>
+                <a href="{% url 'agregar_carrito' p.id %}" class="text-center py-2 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600 transition">
+                    Agregar 🛒
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="bg-blue-50 rounded-3xl p-8 border border-blue-100">
+    <div class="flex items-center mb-6">
+        <span class="text-3xl mr-3">✨</span>
+        <h2 class="text-2xl font-bold text-blue-900">Inspirado en tus gustos</h2>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for r in recomendaciones %}
+        <div class="bg-white rounded-2xl shadow-md border-2 border-white hover:border-blue-300 transition-all duration-300 overflow-hidden group">
+            <div class="bg-blue-600 text-white text-[10px] uppercase tracking-widest font-bold py-1 px-3">
+                {{ r.motivo }}
+            </div>
+            
+            <div class="p-5">
+                <h3 class="font-bold text-gray-800 mb-1 group-hover:text-blue-600 transition-colors">
+                    {{ r.producto.nombre }}
+                </h3>
+                <p class="text-blue-700 font-extrabold text-lg mb-4">
+                    ${{ r.producto.precio }}
+                </p>
+                
+                <a href="{% url 'agregar_carrito' r.producto.id %}" class="block text-center py-2 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 shadow-lg shadow-blue-200 transition">
+                    Lo quiero 🚀
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full py-10 text-center">
+            <p class="text-gray-500 italic">Explora la tienda para que nuestra IA aprenda qué te gusta.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

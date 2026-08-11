@@ -1,0 +1,391 @@
+:root{
+    --primary:#2563eb;
+    --primary-dark:#1d4ed8;
+    --success:#16a34a;
+    --warning:#facc15;
+    --danger:#dc2626;
+
+    --dark:#0f172a;
+    --text:#334155;
+    --light:#f8fafc;
+    --border:#e2e8f0;
+
+    --radius:18px;
+
+    --shadow:
+        0 4px 20px rgba(15,23,42,.08);
+}
+
+/* =========================
+   GENERAL
+========================= */
+
+body{
+    background:#f8fafc;
+    color:var(--text);
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.dashboard-header{
+    background:
+        linear-gradient(
+            135deg,
+            #0f172a,
+            #2563eb
+        );
+
+    border-radius:24px;
+
+    padding:3rem 2rem;
+
+    margin-bottom:2rem;
+
+    color:white;
+
+    box-shadow:var(--shadow);
+}
+
+.dashboard-title{
+    font-size:2.3rem;
+    font-weight:700;
+}
+
+.dashboard-subtitle{
+    opacity:.9;
+    font-size:1rem;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.stats-card,
+.modern-card{
+    border:none;
+
+    border-radius:var(--radius);
+
+    box-shadow:var(--shadow);
+
+    overflow:hidden;
+}
+
+.stats-card{
+    transition:.25s ease;
+}
+
+.stats-card:hover{
+    transform:translateY(-4px);
+}
+
+.stats-card .card-body{
+    padding:1.6rem;
+}
+
+.stats-number{
+    font-size:2.4rem;
+    font-weight:700;
+}
+
+.stats-icon{
+    width:65px;
+    height:65px;
+
+    border-radius:16px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:1.7rem;
+
+    background:rgba(255,255,255,.18);
+}
+
+/* COLORES */
+
+.premium-card{
+    background:linear-gradient(135deg,#facc15,#f59e0b);
+    color:#1e293b;
+}
+
+.ocasional-card{
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+    color:white;
+}
+
+.inactivo-card{
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+    color:white;
+}
+
+/* =========================
+   TITULOS
+========================= */
+
+.card-title-modern{
+    font-weight:700;
+    color:var(--dark);
+}
+
+/* =========================
+   ACCORDION
+========================= */
+
+.accordion-item{
+    border:none !important;
+
+    border-radius:14px !important;
+
+    overflow:hidden;
+
+    margin-bottom:10px;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.04);
+}
+
+.accordion-button{
+    font-weight:600;
+
+    color:var(--dark) !important;
+
+    background:white !important;
+}
+
+.accordion-button:not(.collapsed){
+    background:#eff6ff !important;
+
+    color:var(--primary) !important;
+
+    box-shadow:none !important;
+}
+
+.accordion-button:focus{
+    box-shadow:none !important;
+}
+
+.accordion-body{
+    color:var(--text);
+}
+
+/* =========================
+   TABLA
+========================= */
+
+.table-container{
+    border-radius:24px;
+
+    overflow:hidden;
+
+    box-shadow:var(--shadow);
+}
+
+.table-container .card-header{
+    background:#0f172a !important;
+
+    border:none;
+
+    padding:1.2rem 1.5rem;
+}
+
+.table-container .card-header h5{
+    color:white;
+
+    font-weight:700;
+}
+
+.table-container .card-body{
+    background:white;
+
+    padding:1.5rem;
+}
+
+/* TABLA */
+
+#tablaClientes{
+    width:100% !important;
+}
+
+#tablaClientes thead th{
+    background:#eff6ff !important;
+
+    color:var(--dark) !important;
+
+    border:none !important;
+
+    font-size:.82rem;
+
+    text-transform:uppercase;
+
+    letter-spacing:.5px;
+
+    padding:1rem !important;
+
+    font-weight:700;
+}
+
+#tablaClientes tbody td{
+    padding:1rem !important;
+
+    vertical-align:middle;
+
+    border-bottom:1px solid #f1f5f9 !important;
+
+    color:var(--dark) !important;
+}
+
+#tablaClientes tbody tr:hover{
+    background:#f8fafc;
+}
+
+/* =========================
+   USER
+========================= */
+
+.user-avatar{
+    width:42px;
+    height:42px;
+
+    border-radius:14px;
+
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:white;
+}
+
+#tablaClientes small{
+    color:#64748b !important;
+}
+
+/* =========================
+   BADGES
+========================= */
+
+.segment-badge{
+    border-radius:999px;
+
+    padding:.55rem 1rem;
+
+    font-size:.8rem;
+
+    font-weight:700;
+
+    min-width:130px;
+
+    display:inline-block;
+}
+
+/* =========================
+   BOTONES
+========================= */
+
+.btn-modern{
+    border-radius:12px;
+
+    padding:.7rem 1rem;
+
+    font-weight:600;
+}
+
+.btn-outline-light:hover{
+    background:white !important;
+
+    color:var(--dark) !important;
+}
+
+/* =========================
+   DATATABLE
+========================= */
+
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info{
+    color:var(--dark) !important;
+
+    font-weight:500;
+}
+
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select{
+    border:1px solid var(--border) !important;
+
+    border-radius:12px;
+
+    padding:.45rem .8rem;
+
+    background:white !important;
+
+    color:var(--dark) !important;
+}
+
+.dataTables_wrapper .dataTables_filter input:focus{
+    outline:none;
+
+    border-color:var(--primary) !important;
+
+    box-shadow:
+        0 0 0 3px rgba(37,99,235,.12);
+}
+
+/* PAGINACION */
+
+.dataTables_wrapper .paginate_button{
+    border:none !important;
+
+    border-radius:10px !important;
+
+    color:var(--dark) !important;
+}
+
+.dataTables_wrapper .paginate_button.current{
+    background:var(--primary) !important;
+
+    color:white !important;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:768px){
+
+    .dashboard-header{
+        padding:2rem 1.5rem;
+    }
+
+    .dashboard-title{
+        font-size:1.8rem;
+    }
+
+    .stats-number{
+        font-size:2rem;
+    }
+}
+
+/* =========================
+   COLORES SEGMENTOS
+========================= */
+
+.segment-premium{
+    background: linear-gradient(135deg,#facc15,#f59e0b);
+    color:#1e293b !important;
+}
+
+.segment-ocasional{
+    background: linear-gradient(135deg,#2563eb,#1d4ed8);
+    color:white !important;
+}
+
+.segment-inactivo{
+    background: linear-gradient(135deg,#ef4444,#dc2626);
+    color:white !important;
+}
+

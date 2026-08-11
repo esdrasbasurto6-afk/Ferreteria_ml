@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Carrito</h2>
+
+{% for item in items %}
+<p>{{ item.producto.nombre }} x {{ item.cantidad }}</p>
+{% endfor %}
+
+<h3>Total: ${{ total }}</h3>
+
+<a href="{% url 'checkout' %}" class="bg-blue-500 text-white p-2" style="text-decoration: none; display: inline-block;">
+    Checkout
+</a>
+
+{% endblock %}
